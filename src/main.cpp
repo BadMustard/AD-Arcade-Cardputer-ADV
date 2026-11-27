@@ -3,9 +3,10 @@
 //  Menu facon console + jeux. Menu : B (cote) = suivant, HAUT (PWR) = precedent, M5 (A) = lancer
 //  Dans un jeu : maintenir HAUT (PWR) 1,5 s = retour au menu
 // ============================================================================
-// #ifdef AD_CARDPUTER
-// #include <M5Cardputer.h>
-// #endif
+
+//#ifdef AD_CARDPUTER
+//#include <M5Cardputer.h>
+//#endif
 
 #if defined(ARDUINO_M5STACK_CARDPUTER) || defined(ARDUINO_M5STACK_CARDPUTER_ADV)
   #define a_cardputer 1
@@ -108,7 +109,7 @@ void btnUpdate() {
 #endif
   uint32_t now = millis();
   g_pwrHold = false;
-#if defined a_cardputer
+#ifdef a_cardputer
   {                                                                                        // Cardputer : le clavier joue le role des boutons et du tilt
     auto &kb = M5Cardputer.Keyboard;
     auto &ks = kb.keysState();
@@ -419,7 +420,7 @@ static void intro() {
 
 void setup() {
   auto cfg = M5.config();
-#ifdef AD_CARDPUTER
+#ifdef a_cardputer
   M5Cardputer.begin(cfg, true);
 #else
   M5.begin(cfg);
