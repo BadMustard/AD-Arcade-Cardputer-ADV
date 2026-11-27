@@ -3,9 +3,23 @@
 //  Menu facon console + jeux. Menu : B (cote) = suivant, HAUT (PWR) = precedent, M5 (A) = lancer
 //  Dans un jeu : maintenir HAUT (PWR) 1,5 s = retour au menu
 // ============================================================================
-#ifdef AD_CARDPUTER
-#include <M5Cardputer.h>
+// #ifdef AD_CARDPUTER
+// #include <M5Cardputer.h>
+// #endif
+
+#if defined(ARDUINO_M5STACK_CARDPUTER) || defined(ARDUINO_M5STACK_CARDPUTER_ADV)
+  #define a_cardputer 1
+  #include <M5Cardputer.h>
 #endif
+
+#ifndef SCR_ROT
+  #if a_cardputer
+    #define SCR_ROT 0
+  #else
+    #define SCR_ROT 3
+  #endif
+#endif
+
 #include "common.h"
 #include "icons_art.h"
 
@@ -83,7 +97,7 @@ static bool g_pwrHold = false;   // vrai une frame quand l'utilisateur demande "
 //  - Nesso N1 : pas de 3e bouton, un doigt sur l'ecran joue le role de PWR.
 //  - Tous : A+B maintenus ~1,2 s = retour au menu (marche meme si PWR ne peut pas etre maintenu).
 void btnUpdate() {
-#ifdef AD_CARDPUTER
+#ifdef a_cardputer
   // M5.update() remet BtnA a l'etat du bouton Go (G0) a chaque image : l'appui clavier (Entree) etait alors
   // annule par l'anti-rebond et A ne marchait jamais au clavier. On garde l'etat de BtnA et on le recalcule nous-memes.
   m5::Button_Class keepA = M5.BtnA;
@@ -94,7 +108,7 @@ void btnUpdate() {
 #endif
   uint32_t now = millis();
   g_pwrHold = false;
-#if defined(AD_CARDPUTER)
+#if defined a_cardputer
   {                                                                                        // Cardputer : le clavier joue le role des boutons et du tilt
     auto &kb = M5Cardputer.Keyboard;
     auto &ks = kb.keysState();
